@@ -28,7 +28,7 @@ jobs:
       - run: echo 'GOPATH='"$(go env GOPATH)" >> $GITHUB_ENV
         shell: bash
       - run: |
-          cd current-repo
+          cd $GITHUB_WORKSPACE
           pwd
       # - name: Run golangci-lint
       #   uses: golangci/golangci-lint-action@v2
