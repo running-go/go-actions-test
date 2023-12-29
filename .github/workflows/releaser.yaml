@@ -35,4 +35,24 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           # Your GoReleaser Pro key, if you are using the 'goreleaser-pro'
           # distribution:
-          # GORELEASER_KEY: ${{ secrets.GORELEASER_KEY }}
+        # GORELEASER_KEY: ${{ secrets.GORELEASER_KEY }}
+
+
+      - name: Configure Git
+        run: |
+          git config user.name "$GITHUB_ACTOR"
+          git config user.email "$GITHUB_ACTOR@users.noreply.github.com"
+  # helm chart
+      - name: Install helm
+        uses: azure/setup-helm@v3
+        with:
+          version: v3.13.0
+        
+      - name: Run chart-releaser
+        uses: helm/chart-releaser-action@v1.6.0
+        # with:
+          # charts_dir: charts/go-actions-test
+          # config: cr.yaml
+        env:
+          CR_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
+        
