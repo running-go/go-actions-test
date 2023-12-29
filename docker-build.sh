@@ -1,0 +1,1 @@
+docker build -t akenisocean/go-action-test:v0.0.1 .
