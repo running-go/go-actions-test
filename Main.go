@@ -62,5 +62,13 @@ func newRouter() *httprouter.Router {
 	// }
 
 	mux.GET("/channel/stats", GetChannelStats())
+	mux.GET("/ping", func(w http.ResponseWriter, r *http.Request, p httprouter.Params) {
+		w.Header().Set("Content-Type", "application/json")
+		w.WriteHeader(http.StatusOK)
+		_, err := w.Write([]byte("pong"))
+		if err != nil {
+			panic(err)
+		}
+	})
 	return mux
 }
