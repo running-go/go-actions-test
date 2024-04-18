@@ -1,0 +1,31 @@
+version: '3'
+services: 
+   grafana:
+     image: grafana/grafana:latest
+     hostname: grafana
+     container_name: grafana
+     networks:
+       - devops-compose
+     ports:
+       - 3000:3000
+   loki:
+     image: grafana/loki:latest
+     hostname: loki
+     container_name: loki
+     ports:
+       - 3100:3100
+     networks:
+       - devops-compose
+   promtail:
+     image: grafana/promtail:latest
+     hostname: promtail
+     container_name: promtail
+     command: -config.file=/etc/promtail/config.yml
+     volumes:
+       - ./promtail/promtail-config.yaml:/etc/promtail/config.yml
+       - ./promtail/website.access.log:/var/log/website.access.log
+     networks:
+       - devops-compose
+networks:
+  devops-compose:
+    external: true

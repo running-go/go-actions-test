@@ -1,0 +1,15 @@
+version: '3'
+services:
+   logstash:
+      image: docker.elastic.co/logstash/logstash:7.16.3
+      container_name: logstash
+      hostname: logstash
+      volumes:
+        - /workspaces/go-actions-test/nginx/GeoLite2-City_20240416/GeoLite2-City.mmdb:/usr/share/logstash/GeoLite2-City.mmdb
+        - ./logstash.conf:/usr/share/logstash/pipeline/logstash.conf
+      networks:
+        - devops-compose
+
+networks:
+  devops-compose:
+    external: true

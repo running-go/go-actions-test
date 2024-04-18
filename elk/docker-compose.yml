@@ -1,0 +1,78 @@
+version: "3.7"
+services:
+  jk-di-kibana:
+    hostname: jk-di-kibana
+    image: akenisocean/kibana:7.16.3
+    container_name: jk-di-kibana
+    #    user: "0:0"
+    ports:
+      - "5601:5601"
+    logging:
+      # 日志方式使用默认json-file
+      driver: "json-file"
+      options:
+        max-size: "100m"
+        max-file: "1"
+    networks:
+      - devops-compose
+    depends_on:
+      - jk-di-es1
+    environment:
+#      - I18N_LOCALE=zh-CN
+      - ELASTICSEARCH_HOSTS=["http://jk-di-es1:9200"]
+      - ELASTICSEARCH_USERNAME=jkstack
+      - ELASTICSEARCH_PASSWORD=123qweASD
+  jk-di-es1:
+    hostname: jk-di-es1
+    image: akenisocean/security-elasticsearch:7.16.3
+    container_name: jk-di-es1
+#    user: "0:0"
+    ports:
+      - "9200:9200"
+      - "9300:9300"
+    logging:
+      # 日志方式使用默认json-file
+      driver: "json-file"
+      options:
+        max-size: "100m"
+        max-file: "1"
+    networks:
+      - devops-compose
+    volumes:
+      - jk-di-es-data1:/usr/share/elasticsearch/data
+    environment:
+      - discovery.type=single-node
+      - node.name=jk-di-es1
+      - network.host=0.0.0.0
+      - network.bind_host=0.0.0.0
+      - http.cors.enabled=true
+      - http.cors.allow-origin=*
+      - http.cors.allow-headers=Authorization,X-Requested-With,Content-Length,Content-Type
+      - bootstrap.memory_lock=false
+      # 用户认证授权
+      - xpack.security.enabled=true
+      # 设置用户和密码
+      - ES_USER=jkstack
+      - ES_PASSWORD=123qweASD
+      - search.max_buckets=500000
+      - indices.fielddata.cache.size=30%
+      - ES_JAVA_OPTS=-Xms3G -Xmx3G
+      - indices.breaker.total.limit=80%
+      - indices.breaker.fielddata.limit=60%
+      - indices.breaker.request.limit=60%
+      - cluster.max_shards_per_node=10000
+      # 设置节点对应的角色
+      - node.master=true
+      - node.ingest=true
+      - node.data=true
+      - node.ml=false
+      - xpack.ml.enabled=false
+      # 设置快照备份的本地仓库位置
+      - path.repo=/usr/share/elasticsearch/backups
+
+networks:
+  devops-compose:
+    external: true
+
+volumes:
+  jk-di-es-data1:

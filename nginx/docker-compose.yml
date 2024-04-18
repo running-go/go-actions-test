@@ -23,9 +23,9 @@ services:
       - ./web.conf:/etc/nginx/site-enabled/web.conf
       - ./GeoLiteCity.dat:/var/log/nginx/geoip/GeoLiteCity.dat
       - ./GeoIP.dat:/var/log/nginx/geoip/GeoIP.dat
+      - ./logs/:/var/log/nginx/
     networks:
       - devops-compose
-
 networks:
   devops-compose:
     external: true
